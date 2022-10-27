@@ -1,0 +1,17 @@
+{
+  "name": "maid_comic_house_spider",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Maid",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "typescript": "^4.8.4"
+  },
+  "devDependencies": {
+    "eslint": "8.22.0",
+    "@types/eslint": "^8.4.7",
+    "@antfu/eslint-config": "^0.27.0"
+  }
+}
