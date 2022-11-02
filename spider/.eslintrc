@@ -1,6 +1,12 @@
 {
   "extends": "@antfu",
   "rules": {
+    "no-use-before-define": [
+      "error",
+      {
+        "function": "false"
+      }
+    ],
     "no-console": "off"
   }
 }

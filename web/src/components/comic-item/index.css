@@ -1,0 +1,16 @@
+.comic-container{
+  height: 45vw;
+  margin: 1vw;
+  /* background: #eee; */
+  text-align: center;
+  /* color: #999999; */
+  overflow: hidden;
+}
+
+.comic-container .comic-cover{
+  margin: 2px;
+  height: 86%;
+  /* border: solid 2px #999999; */
+  border-radius: 10px;
+  overflow: hidden;
+}

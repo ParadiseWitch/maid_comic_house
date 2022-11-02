@@ -1,0 +1,4 @@
+.comic-list{
+  display: grid;
+  grid-template-columns: 32vw 32vw 32vw;
+}

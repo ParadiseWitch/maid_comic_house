@@ -1,0 +1,24 @@
+.app {
+  width: 100vw;
+  height: 100vh; 
+  display: flex;
+  flex-direction: column;
+}
+
+.top {
+  flex: 0;
+  border-bottom: solid 1px #eee; 
+  display: fixed;
+}
+
+.body {
+  height: 85vh;
+  overflow: scroll;
+  padding: 2vw;
+}
+
+.bottom {
+  flex: 0;
+  border-top: solid 1px #eee;
+}
+
