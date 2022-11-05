@@ -6,25 +6,26 @@ import Chapter from '/@/pkg/chapter'
 
 function chapter() {
   const navigate = useNavigate()
-  const [showInfo, setShowInfo] = useState(false)
+  const [showInfo, setShowInfo] = useState(true)
   const swiperRef = useRef<SwiperRef>(null)
-  const [curIndex, setCueIndex] = useState(1)
+  // 从0开始
+  const [curIndex, setCurIndex] = useState(0)
 
   const chapterData: Chapter = new Chapter('第1话')
   chapterData.imgs = [
-    'https://cdn.1he7c.com/zhuanshengzhihouwoxiangyaozaitianyuanguomanshenghu/4a895/16408000298076/h1500x.jpg',
-    'xxx',
-    'https://hi77-overseas.mangafuna.xyz/dianjuren/d4e9c/1647068876240001.png.c800x.jpg',
-    ' https://hi77-overseas.mangafuna.xyz/huayuanjiadeshuangzi/e7a24/1647249435180007.jpg.c800x.jpg',
-    ' https://hi77-overseas.mangafuna.xyz/huayuanjiadeshuangzi/e7a24/1647249435180007.jpg.c800x.jpg',
-    ' https://hi77-overseas.mangafuna.xyz/huayuanjiadeshuangzi/e7a24/1647249435180007.jpg.c800x.jpg',
-    ' https://hi77-overseas.mangafuna.xyz/huayuanjiadeshuangzi/e7a24/1647249435180007.jpg.c800x.jpg',
-    ' https://hi77-overseas.mangafuna.xyz/huayuanjiadeshuangzi/e7a24/1647249435180007.jpg.c800x.jpg',
-    ' https://hi77-overseas.mangafuna.xyz/huayuanjiadeshuangzi/e7a24/1647249435180007.jpg.c800x.jpg',
-    ' https://hi77-overseas.mangafuna.xyz/huayuanjiadeshuangzi/e7a24/1647249435180007.jpg.c800x.jpg',
-    ' https://hi77-overseas.mangafuna.xyz/huayuanjiadeshuangzi/e7a24/1647249435180007.jpg.c800x.jpg',
-    'https://cdn.1he7c.com/zhuanshengzhihouwoxiangyaozaitianyuanguomanshenghu/4a895/16408000298076/h1500x.jpg',
+    'http://images.dmzj.com/z/%E4%BD%90%E4%BD%90%E6%9C%A8%E5%A4%A7%E5%8F%94%E4%B8%8E%E5%B0%8F%E5%93%94/08/038.jpg',
+    'x',
+    'http://images.dmzj.com/z/%E4%BD%90%E4%BD%90%E6%9C%A8%E5%A4%A7%E5%8F%94%E4%B8%8E%E5%B0%8F%E5%93%94/08/038.jpg',
+    'http://images.dmzj.com/z/%E4%BD%90%E4%BD%90%E6%9C%A8%E5%A4%A7%E5%8F%94%E4%B8%8E%E5%B0%8F%E5%93%94/08/038.jpg',
   ]
+
+  const goTo = (index: number) => {
+    if (index < 0)
+      swiperRef?.current?.swipeTo(0)
+    if (index > chapterData.imgs.length - 1)
+      swiperRef?.current?.swipeTo(chapterData.imgs.length - 1)
+    swiperRef?.current?.swipeTo(index)
+  }
   return <>
     {showInfo && <>
       <div style={{ position: 'fixed', backgroundColor: '#eee', width: '100%' }}>
@@ -34,9 +35,9 @@ function chapter() {
       </div>
       <div style={{ position: 'fixed', width: '100%', bottom: '0', marginBottom: '10px' }}>
         <Slider popover={true} min={1} max={chapterData.imgs.length}
-          value={curIndex}
+          value={curIndex + 1}
           onChange={(val) => {
-            swiperRef?.current?.swipeTo(val as number - 1)
+            goTo(val as number - 1)
           }} />
       </div>
     </>}
@@ -67,20 +68,29 @@ function chapter() {
             </>
           )}
           onIndexChange={(index) => {
-            setCueIndex(index + 1)
+            setCurIndex(index)
           }}>
           {chapterData.imgs.map((src, index) =>
             <Swiper.Item
-              onClick={() => { setShowInfo(!showInfo) }}
               style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }} key={index}>
-              <div>
+              <div style={{ height: '100%' }}>
+                <div style={{ position: 'fixed', height: '100%', width: '100%', display: 'flex' }}>
+                  <div style={{ flex: 1 }} onClick={() => { goTo(curIndex - 1) }}></div>
+                  <div style={{ flex: 1 }} onClick={() => { setShowInfo(!showInfo) }}></div>
+                  <div style={{ flex: 1 }} onClick={() => { goTo(curIndex + 1) }}></div>
+                </div>
                 <Image
                   lazy
                   src={src}
                   width={'100%'}
                   fit='cover'
                   height={'100%'}
-                  fallback={<AutoCenter style={{ color: '#eee' }}>加载失败</AutoCenter>}
+                  fallback={
+                    <AutoCenter style={{ color: '#eee', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                      <AutoCenter>
+                        加载失败
+                      </AutoCenter>
+                  </AutoCenter>}
                 />
               </div>
             </Swiper.Item>)}

@@ -4,3 +4,4 @@ log
 caputer
 *.log
 .vscode/launch.json
+web/src/pages/.DS_Store
