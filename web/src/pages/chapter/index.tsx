@@ -3,6 +3,7 @@ import type { SwiperRef } from 'antd-mobile/es/components/swiper'
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Chapter from '/@/pkg/chapter'
+import './index.css'
 
 function chapter() {
   const navigate = useNavigate()
@@ -33,12 +34,20 @@ function chapter() {
           {chapterData.name}
         </NavBar >
       </div>
-      <div style={{ position: 'fixed', width: '100%', bottom: '0', marginBottom: '10px' }}>
+      <div style={{ position: 'fixed', width: '100%', bottom: '0', marginBottom: '0px', display: 'flex' }}>
+        <div style={{ lineHeight: '28px', paddingLeft: 10 }}
+          onClick={() => { console.log('prev') }}
+        >上一话</div>
         <Slider popover={true} min={1} max={chapterData.imgs.length}
           value={curIndex + 1}
+          icon={<></>}
+          style={{ width: '64%', paddingLeft: 20 }}
           onChange={(val) => {
             goTo(val as number - 1)
           }} />
+        <div style={{ lineHeight: '28px', paddingRight: 10 }}
+          onClick={() => { console.log('next') }}
+        >下一话</div>
       </div>
     </>}
     <div style={{ backgroundColor: 'black' }}>
