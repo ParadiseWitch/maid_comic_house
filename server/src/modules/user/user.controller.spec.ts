@@ -13,21 +13,21 @@ describe('UserController', () => {
     userController = user.get<UserController>(UserController);
   });
 
-  describe('login', () => {
-    it('should return success', () => {
-      expect(userController.login({ name: '', password: '' })).toEqual({
-        state: 'success',
-        data: null,
-      });
-    });
-  });
+  // describe('login', () => {
+  //   it('should return success', () => {
+  //     expect(userController.login({ name: '', password: '' })).toEqual({
+  //       state: 'success',
+  //       data: null,
+  //     });
+  //   });
+  // });
 
-  describe('regist', () => {
-    it('should return success', () => {
-      expect(userController.login({ name: '', password: '' })).toEqual({
-        state: 'success',
-        data: null,
-      });
-    });
-  });
+  // describe('regist', () => {
+  //   it('should return success', () => {
+  //     expect(userController.login({ name: '', password: '' })).toEqual({
+  //       state: 'success',
+  //       data: null,
+  //     });
+  //   });
+  // });
 });

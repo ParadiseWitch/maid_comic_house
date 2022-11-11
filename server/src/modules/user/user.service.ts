@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { ResultType, User } from './user.dto';
+import { Not, Repository } from 'typeorm';
+import { User } from './user.entity';
 
 @Injectable()
 export class UserService {
@@ -12,22 +12,43 @@ export class UserService {
     private usersRepository: Repository<User>,
   ) {}
 
-  login(name: string, password: string): any {
+  async login(name: string, password: string) {
+    const usr = await this.usersRepository.findOneBy({ name });
+    if (!usr) {
+      return {
+        state: 'fail',
+        msg: 'user already esist',
+      };
+    }
+    // TODO encry
+    // TODO JWT
+    if (usr.password !== password) {
+      return {
+        state: 'fail',
+        msg: 'password mistake',
+      };
+    }
     return {
       state: 'success',
       data: null,
     };
   }
 
-  regist(name: string, password: string): ResultType {
+  async regist(name: string, password: string) {
+    const usr = await this.usersRepository.findOneBy({ name });
+    if (usr) {
+      return {
+        state: 'fail',
+        msg: 'user already exist',
+      };
+    }
+    const nuser = new User();
+    nuser.name = name;
+    nuser.password = password;
+    await this.usersRepository.insert(nuser);
     return {
       state: 'success',
-      data: null,
+      data: nuser,
     };
-  }
-
-  findOne(id: string): Promise<User> {
-    //FIXME
-    return this.usersRepository.findOne({ id });
   }
 }
