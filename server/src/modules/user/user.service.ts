@@ -16,11 +16,11 @@ export class UserService {
   async login(name: string, password: string) {
     const usr = await this.usersRepository.findOneBy({ name });
     if (!usr) {
-      throw new ForbiddenException('user not exist');
+      throw new ForbiddenException('用户不存在');
     }
 
     if (!compareSync(password, usr.password)) {
-      throw new ForbiddenException('password mistake');
+      throw new ForbiddenException('密码错误');
     }
     return {
       state: 'success',
@@ -31,7 +31,7 @@ export class UserService {
   async regist(name: string, password: string) {
     const usr = await this.usersRepository.findOneBy({ name });
     if (usr) {
-      throw new ForbiddenException('user already exist');
+      throw new ForbiddenException('用户已存在');
     }
     const nuser = new User();
     nuser.name = name;
