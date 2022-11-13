@@ -1,19 +1,22 @@
-import { Badge, NavBar, SearchBar, TabBar } from 'antd-mobile'
+import { Badge, NavBar, SearchBar, Space, TabBar } from 'antd-mobile'
+import { UserOutline } from 'antd-mobile-icons'
+import { useNavigate } from 'react-router-dom'
 import ComicList from '../../components/comic-list'
 
 import './index.css'
 
 function home() {
+  const navigate = useNavigate();
   const tabs = [
     {
       key: 'all',
-      title: '全部',
+      title: '书柜',
       icon: '',
       badge: Badge.dot,
     },
     {
       key: 'new',
-      title: '未看',
+      title: '我的',
       icon: '',
       badge: '5',
     },
@@ -23,7 +26,13 @@ function home() {
     <>
       <div className='app'>
         <div className='top'>
-          <NavBar back={null}>
+          <NavBar back={null} right={
+            <div style={{ fontSize: 25 }} onClick={()=>{
+              navigate("login")
+            }}>
+                <UserOutline />
+            </div>
+          }>
             Maid漫画屋☕
           </NavBar >
         </div>
@@ -59,7 +68,7 @@ function home() {
         <div className='bottom'>
           <TabBar>
             {tabs.map(item => (
-              <TabBar.Item key={item.key} title={item.title} />
+              <TabBar.Item {...item} />
             ))}
           </TabBar>
         </div>
