@@ -1,5 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { compareSync } from 'bcrypt';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 
@@ -15,18 +16,11 @@ export class UserService {
   async login(name: string, password: string) {
     const usr = await this.usersRepository.findOneBy({ name });
     if (!usr) {
-      return {
-        state: 'fail',
-        msg: 'user already esist',
-      };
+      throw new ForbiddenException('user not exist');
     }
-    // TODO encry
-    // TODO JWT
-    if (usr.password !== password) {
-      return {
-        state: 'fail',
-        msg: 'password mistake',
-      };
+
+    if (!compareSync(password, usr.password)) {
+      throw new ForbiddenException('password mistake');
     }
     return {
       state: 'success',
@@ -37,10 +31,7 @@ export class UserService {
   async regist(name: string, password: string) {
     const usr = await this.usersRepository.findOneBy({ name });
     if (usr) {
-      return {
-        state: 'fail',
-        msg: 'user already exist',
-      };
+      throw new ForbiddenException('user already exist');
     }
     const nuser = new User();
     nuser.name = name;
