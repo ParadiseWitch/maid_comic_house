@@ -33,9 +33,13 @@ function login() {
         display: 'flex',
         flexDirection: 'column',
         height: '100vh',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-evenly',
       }}>
-        <List header=''>
+        <List header='' style={{
+          borderLeft: '1px solid #eee',
+          borderRight: '1px solid #eee',
+          margin: 30,
+        }}>
           <List.Item>
             <AutoCenter>用户登录</AutoCenter>
           </List.Item>
