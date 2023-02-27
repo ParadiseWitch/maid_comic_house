@@ -1,19 +1,19 @@
-import { hashSync } from 'bcrypt';
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { hashSync } from 'bcrypt'
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: string
 
   @Column()
-  name: string;
+  name: string
 
   @Column()
-  password: string;
+  password: string
 
   @BeforeInsert()
-  bcryptPad() {
-    this.password = hashSync(this.password, 6);
+  bcryptPad () {
+    this.password = hashSync(this.password, 6)
   }
 }
