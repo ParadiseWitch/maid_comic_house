@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { compareSync } from 'bcrypt'
+import { compareSync } from 'bcryptjs'
 import { Repository } from 'typeorm'
 import { User } from './user.entity'
 
@@ -8,12 +8,12 @@ import { User } from './user.entity'
 export class UserService {
   private readonly logger = new Logger(UserService.name)
 
-  constructor (
+  constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) {}
+  ) { }
 
-  async login (name: string, password: string) {
+  async login(name: string, password: string) {
     const usr = await this.usersRepository.findOneBy({ name })
     if (!usr) {
       throw new ForbiddenException('用户不存在')
@@ -28,7 +28,7 @@ export class UserService {
     }
   }
 
-  async regist (name: string, password: string) {
+  async regist(name: string, password: string) {
     const usr = await this.usersRepository.findOneBy({ name })
     if (usr) {
       throw new ForbiddenException('用户已存在')

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { UserController } from './user.controller'
 import { UserService } from './user.service'
-import { compareSync, hashSync } from 'bcrypt'
+import { hashSync, compareSync } from 'bcryptjs'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { User } from './user.entity'
 
@@ -50,8 +50,8 @@ describe('UserController', () => {
     })
   })
 
-  describe('bcrypt', () => {
-    it('test bcrypt', () => {
+  describe('bcryptjs', () => {
+    it('test bcryptjs', () => {
       const pad = '4edfasdfssgsdgdhgd'
       const hashPad = hashSync(pad, 6)
       expect(compareSync(pad, hashPad)).toEqual(true)
