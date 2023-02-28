@@ -4,6 +4,7 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { User } from './modules/user/user.entity'
 import { UserModule } from './modules/user/user.module'
+import { SpiderModule } from './modules/spider/spider.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UserModule } from './modules/user/user.module'
       synchronize: true,
     }),
     UserModule,
+    SpiderModule,
   ],
   controllers: [AppController],
   providers: [AppService],
