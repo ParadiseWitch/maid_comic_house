@@ -25,8 +25,8 @@ async function initBrowserAndPage () {
 
   try {
     browser = await chromium.launch({
-    headless: false,
-  })
+      headless: false
+    })
     page = await browser.newPage()
     page.setDefaultNavigationTimeout(30000)
     await page.setViewportSize({ width: 1920, height: 1080 })
@@ -76,14 +76,12 @@ const spiderComicAllChapter = async (comicName: string) => {
     chapters = await page.$$eval<Chapter[], HTMLElement>(
       '#default全部 ul:first-child a',
       (els, host) =>
-        els.map(
-          (el): Chapter => {
-            return {
-              url: host + el.getAttribute('href'),
-              title: el.textContent || '暂无标题'
-            }
+        els.map((el): Chapter => {
+          return {
+            url: host + el.getAttribute('href'),
+            title: el.textContent || '暂无标题'
           }
-        ),
+        }),
       host
     )
   } catch (e) {
@@ -120,10 +118,7 @@ const spiderComicAllChapter = async (comicName: string) => {
  * @param chapter 章节数组
  * @param comic_title 漫画名
  */
-const spiderChapter = async (
-  chapter: Chapter,
-  comic_title: string
-) => {
+const spiderChapter = async (chapter: Chapter, comic_title: string) => {
   let imgs: string[]
   const chapter_title: string = chapter.title
   const chapter_link = chapter.url
@@ -164,20 +159,20 @@ const spiderChapter = async (
   for (let imgIndex = 0; imgIndex < imgs.length; imgIndex++) {
     const link = imgs[imgIndex]
     // try {
-      // TODO 注意复制后缀
-      retry(async () => {
-        await download(
-          link,
-          `./caputer/${comic_title}/${chapter_title}/第${imgIndex + 1}页.png`
-        )
-      }).catch((e)=>{
-        Log.error(
-          `${comic_title} ${chapter_title} 下载第${imgIndex + 1}页图片失败`,
-          e
-        )
-      })
+    // TODO 注意复制后缀
+    retry(async () => {
+      await download(
+        link,
+        `./caputer/${comic_title}/${chapter_title}/第${imgIndex + 1}页.png`
+      )
+    }).catch(e => {
+      Log.error(
+        `${comic_title} ${chapter_title} 下载第${imgIndex + 1}页图片失败`,
+        e
+      )
+    })
     // } catch (e) {
-      
+
     // }
   }
 }
@@ -188,9 +183,7 @@ const spiderChapter = async (
  * @param url
  * @returns
  */
-async function goToChapterPageAndGetImgs (
-  url: string
-): Promise<string[]> {
+async function goToChapterPageAndGetImgs (url: string): Promise<string[]> {
   // page.setDefaultNavigationTimeout(30000)
   // await page.waitForNavigation()
   const chapterPage: Page = await browser.newPage()
@@ -234,8 +227,8 @@ async function goToChapterPageAndGetImgs (
       await chapterPage.keyboard.press('PageDown')
       await chapterPage.waitForTimeout(100)
       // 默认如果漫画页数的Dom节点，那么这个节点也会加载
-      const comicIndex = await (
-        // FIXME: page.$: Target closed
+      const comicIndex = await // FIXME: page.$: Target closed
+      (
         await chapterPage.$('body > div > .comicIndex')
       ).textContent()
       if (comicCount === comicIndex) {
@@ -275,7 +268,7 @@ async function goToChapterPageAndGetImgs (
 spiderComicAllChapter('huayuanjiadeshuangzi')
 
 // TODO： 单独下载某个章节
-const main = async()=>{
+const main = async () => {
   // await initBrowserAndPage()
   // await spiderChapter({
   //   url: "https://www.copymanga.site/comic/huayuanjiadeshuangzi/chapter/96cc7876-e815-11ea-9ecc-00163e0ca5bd",
@@ -287,7 +280,6 @@ const main = async()=>{
   //     `./第1页.png`
   //   )
   // }, 3)
-
 }
 main()
 

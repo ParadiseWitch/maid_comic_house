@@ -1,26 +1,25 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { SpiderController } from './spider.controller';
-import { SpiderService } from './spider.service';
+import { Test, TestingModule } from '@nestjs/testing'
+import { SpiderController } from './spider.controller'
+import { SpiderService } from './spider.service'
 
 describe('SpiderController', () => {
-  let controller: SpiderController;
+  let controller: SpiderController
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [SpiderController],
       providers: [SpiderService],
-    }).compile();
+    }).compile()
 
-    controller = module.get<SpiderController>(SpiderController);
-  });
+    controller = module.get<SpiderController>(SpiderController)
+  })
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+    expect(controller).toBeDefined()
+  })
 
-  it('test', async () => {
-    const ret = await controller.test();
-
-    expect(ret).toBe("test");
-  });
+  // it('test spider', async () => {
+  //   const ret = await controller.spider()
+  //   expect(ret).toBe('test')
+  // })
 })

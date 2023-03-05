@@ -2,6 +2,9 @@
 
 GET {{host}}/
 
+### test
+GET {{host}}/spider/test
+
 ### login
 POST {{host}}/login HTTP/1.1
 Content-Type: application/json
@@ -19,3 +22,7 @@ Content-Type: application/json
   "name": "admin",
   "password": "admin"
 }
+
+### spider
+GET {{host}}/spider/test HTTP/1.1
+
