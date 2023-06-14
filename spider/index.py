@@ -11,24 +11,22 @@ page: Page = None
 
 
 def initBrowserAndPage():
+    global browser, page, playwright
     if (browser and page):
         return
-    browser = playwright.chromium.launch(headless=True)
+    browser = playwright.chromium.launch(headless=False)
     page = browser.new_page()
     page.set_default_navigation_timeout(30000)
     page.set_viewport_size({'width': 1920, 'height': 1080})
 
 
 def get_spider_by_site(site: str) -> Spider:
-    if site == 'copycomic':
-        return CopyComicSpider()
+    if site == 'copymanga':
+        return CopyComicSpider(browser, page, playwright)
     raise ValueError('没有找到对应站点的爬虫器！')
 
 
 def spider_comic_all_chapter(comic_id: str, site: str):
-    '''
-    爬全部漫画，接着数据库没有的爬
-    '''
     initBrowserAndPage()
     # 根据site得到spider
     spider = get_spider_by_site(site)
@@ -46,15 +44,9 @@ def spider_chapters(chapter: Chapter):
 
 
 def run(playwright: Playwright) -> None:
-    # Start a browser and create a context
-    browser = playwright.chromium.launch(headless=False)
-    context = browser.new_context()
-
-    # Open a new page
-    page = context.new_page()
-
-    # Go to https://www.google.com/
-    page.goto("https://www.google.com/")
+    site = 'copymanga'
+    url = 'https://www.copymanga.tv/comic/fangxuehoudeouxiangyouyigemimi'
+    spider_comic_all_chapter(url, site)
 
 
 with sync_playwright() as playwright:
