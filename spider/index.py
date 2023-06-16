@@ -5,7 +5,7 @@ from spider.copy_comic_spider import CopyComicSpider
 from spider.spider import Spider
 
 # host = 'https://www.copymanga.site'
-host = 'https://www.copymanga.tv/'
+host = 'https://www.copymanga.tv'
 browser: Browser = None
 page: Page = None
 

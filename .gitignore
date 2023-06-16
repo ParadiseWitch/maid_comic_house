@@ -9,3 +9,4 @@ coverage
 
 .vscode
 __pycache__
+output
