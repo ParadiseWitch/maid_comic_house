@@ -24,7 +24,6 @@ class CopyComicSpider(Spider):
         self.playwright = playwright
 
     def spider_comic_all_chapter(self, url: str):
-
         self.spider_comic_by_url(url)
 
     def spider_comic_by_url(self, url: str):
@@ -45,6 +44,7 @@ class CopyComicSpider(Spider):
             selector='.row > .col-9 > ul > li > h6',
             expression='el => el.textContent || "暂无标题"')
 
+        # TODO 可能要翻页
         chapter_list = self.page.eval_on_selector_all(
             selector='#default全部 ul:first-child a',
             expression="""
@@ -62,7 +62,6 @@ class CopyComicSpider(Spider):
         # 更新comic到数据库
         update_comic(comic)
 
-        print(chapter_list)
         for chapter_item in chapter_list:
             self.spider_chapter_by_url(chapter_item['url'])
         pass
@@ -70,13 +69,21 @@ class CopyComicSpider(Spider):
     def spider_chapter_by_url(self, url: str):
         chapter = Chapter()
         chapter.url = url
-        # TODO
-        chapter.cid = ''
-        chapter.name = ''
 
         chapter_page: Page = self.browser.new_page()
         chapter_page.goto(url)
         chapter_page.set_viewport_size({'width': 1920, 'height': 1080})
+
+        # 获取章节名
+        titles = chapter_page.title().split(' - ')
+        comic_name = titles[0]
+        chapter.name = titles[1]
+
+        # 根据目录按钮链接获取漫画id
+        chapter_page.wait_for_selector('.comicContent-prev.list>a')
+        comic_url = chapter_page.eval_on_selector(
+            '.comicContent-prev.list > a', 'el => el.href')
+        chapter.cid = comic_url.split('/')[-1]
 
         # 获取页数指示器
         chapter_page.wait_for_selector('body > div > .comicCount')
@@ -108,12 +115,11 @@ class CopyComicSpider(Spider):
 
         # TODO保存chapter到数据库
 
-        # TODO下载图片url
         for url in img_urls:
             file_name = url.split('/')[-1]
 
-            down_file_dir = "{}/{}".format(
-                DOWNLOAD_PATH, 'output')
+            down_file_dir = "{}/{}/{}".format(DOWNLOAD_PATH,
+                                              comic_name, chapter.name)
             if not os.path.exists(down_file_dir):
                 os.makedirs(down_file_dir)
 

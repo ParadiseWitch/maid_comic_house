@@ -1,2 +1,1 @@
-
-DOWNLOAD_PATH = 'D:/WorkArea/code/maid_comic_house'
+DOWNLOAD_PATH = 'C:/Users/admin/Downloads/output'

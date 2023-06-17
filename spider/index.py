@@ -14,7 +14,7 @@ def initBrowserAndPage():
     global browser, page, playwright
     if (browser and page):
         return
-    browser = playwright.chromium.launch(headless=False)
+    browser = playwright.chromium.launch(headless=True)
     page = browser.new_page()
     page.set_default_navigation_timeout(30000)
     page.set_viewport_size({'width': 1920, 'height': 1080})
@@ -33,20 +33,23 @@ def spider_comic_all_chapter(comic_id: str, site: str):
     spider.spider_comic_all_chapter(comic_id)
 
 
-def spider_chapters(chapter: Chapter):
+def spider_chapter_by_url(url: str, site: str):
     '''
     爬哪部漫画哪一个章节
     '''
-    comic_url = chapter.comic_url
-    chapter_url = chapter.url
+    initBrowserAndPage()
+    # 根据site得到spider
+    spider = get_spider_by_site(site)
+    spider.spider_chapter_by_url(url)
 
     pass
 
 
 def run(playwright: Playwright) -> None:
     site = 'copymanga'
-    url = 'https://www.copymanga.tv/comic/fangxuehoudeouxiangyouyigemimi'
-    spider_comic_all_chapter(url, site)
+    url = 'https://www.copymanga.tv/comic/dianjuren/chapter/01bbbb6c-0a71-11ee-a9fe-d3d228a76de6'
+    # spider_comic_all_chapter(url, site)
+    spider_chapter_by_url(url, site)
 
 
 with sync_playwright() as playwright:
