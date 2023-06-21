@@ -1,6 +1,12 @@
+from encodings import utf_8
+import logging
+import os
+import time
 from playwright.sync_api import Playwright, sync_playwright, Browser, Page
+from py import log
 
 from comic.chapter import Chapter
+from config import DOWNLOAD_PATH
 from spider.copy_comic_spider import CopyComicSpider
 from spider.spider import Spider
 
@@ -14,7 +20,7 @@ def initBrowserAndPage():
     global browser, page, playwright
     if (browser and page):
         return
-    browser = playwright.chromium.launch(headless=True)
+    browser = playwright.chromium.launch(headless=False)
     page = browser.new_page()
     page.set_default_navigation_timeout(30000)
     page.set_viewport_size({'width': 1920, 'height': 1080})
@@ -47,10 +53,40 @@ def spider_chapter_by_url(url: str, site: str):
 
 def run(playwright: Playwright) -> None:
     site = 'copymanga'
-    url = 'https://www.copymanga.tv/comic/dianjuren/chapter/01bbbb6c-0a71-11ee-a9fe-d3d228a76de6'
-    # spider_comic_all_chapter(url, site)
-    spider_chapter_by_url(url, site)
+    url = 'https://www.copymanga.tv/comic/monvyushimo'
+    # url = 'https://www.copymanga.tv/comic/xinzhichengxu'
+    spider_comic_all_chapter(url, site)
+    # spider_chapter_by_url(url, site)
 
 
 with sync_playwright() as playwright:
+
+    date_str = time.strftime("%Y-%m-%d", time.localtime())
+    logs_dir = '{}/logs/{}'.format(DOWNLOAD_PATH, date_str)
+
+    if not os.path.exists(logs_dir):
+        os.makedirs(logs_dir)
+
+    file_info_handler = logging.FileHandler(
+        '{}/info.log'.format(logs_dir),
+        encoding='utf-8')
+    file_info_handler.setLevel(level=logging.INFO)
+
+    file_warn_handler = logging.FileHandler(
+        '{}/warn.log'.format(logs_dir),
+        encoding='utf-8')
+    file_warn_handler.setLevel(level=logging.WARN)
+
+    file_error_handler = logging.FileHandler(
+        '{}/error.log'.format(logs_dir),
+        encoding='utf-8')
+    file_error_handler.setLevel(level=logging.ERROR)
+
+    logging.basicConfig(
+        level=logging.INFO,
+        encoding='utf-8',
+        format='日志生成时间：%(asctime)s  执行文件名：%(filename)s[line:%(lineno)d]  级别：%(levelname)s  输出信息：%(message)s',
+        datefmt='%Y-%m-%d %A %H:%M:%S',
+        handlers=[file_info_handler, file_warn_handler, file_error_handler])
+
     run(playwright)
