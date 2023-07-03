@@ -4,6 +4,7 @@ import os
 import time
 from playwright.sync_api import Playwright, sync_playwright, Browser, Page
 from py import log
+from tomlkit import date
 
 from comic.chapter import Chapter
 from config import DOWNLOAD_PATH
@@ -20,7 +21,7 @@ def initBrowserAndPage():
     global browser, page, playwright
     if (browser and page):
         return
-    browser = playwright.chromium.launch(headless=False)
+    browser = playwright.chromium.launch(headless=True)
     page = browser.new_page()
     page.set_default_navigation_timeout(30000)
     page.set_viewport_size({'width': 1920, 'height': 1080})
@@ -53,9 +54,28 @@ def spider_chapter_by_url(url: str, site: str):
 
 def run(playwright: Playwright) -> None:
     site = 'copymanga'
-    url = 'https://www.copymanga.tv/comic/monvyushimo'
-    # url = 'https://www.copymanga.tv/comic/xinzhichengxu'
-    spider_comic_all_chapter(url, site)
+    # url = 'https://www.copymanga.tv/comic/monvyushimo'
+    # url = 'https://www.copymanga.tv/comic/chubaowangnv'
+    # spider_comic_all_chapter(url, site)
+    # url = 'https://www.copymanga.tv/comic/chaoziranwuzhuangdangdadang'
+    # spider_comic_all_chapter(url, site)
+    # url = 'https://www.copymanga.tv/comic/jijubukesiyiyanjioubu'
+    # spider_comic_all_chapter(url, site)
+    # url = 'https://www.copymanga.tv/comic/jiandieguojiajia'
+    # spider_comic_all_chapter(url, site)
+    # url = 'https://www.copymanga.tv/comic/zgmsbywt'
+    # spider_comic_all_chapter(url, site)
+    # url = 'https://www.copymanga.tv/comic/nvpengyoujiewoyixia'
+    # spider_comic_all_chapter(url, site)
+    # url = 'https://www.copymanga.tv/comic/dianjuren'
+    # spider_comic_all_chapter(url, site)
+    # url = 'https://www.copymanga.tv/comic/xihuanderenwangjidaiyanjle'
+    # spider_comic_all_chapter(url, site,site)
+    url = 'https://www.copymanga.tv/comic/wodantuidenvhai/chapter/8148b03c-0699-11ee-a881-d3d228a76de6'
+    spider_chapter_by_url(url, site)
+    url = 'https://www.copymanga.tv/comic/wodantuidenvhai/chapter/ef0a84a8-0b24-11ee-aa3f-d3d228a76de6'
+    spider_chapter_by_url(url, site)
+
     # spider_chapter_by_url(url, site)
 
 
