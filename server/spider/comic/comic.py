@@ -5,8 +5,8 @@ from typing import List
 
 class Comic():
     id: str
-    site: str = None
+    site: str
     url: str
-    name: str = None
-    len: int = None
-    chapters: List[Chapter] = None
+    name: str
+    len: int
+    chapters: List[Chapter] = []
