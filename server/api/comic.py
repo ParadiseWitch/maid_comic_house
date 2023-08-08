@@ -1,6 +1,6 @@
 import logging
-from db.db import query_db, update_db
 from flask import Blueprint, request
+from db.db import query_db, update_db
 
 app_comic = Blueprint("app_comic", __name__)
 
@@ -8,6 +8,13 @@ app_comic = Blueprint("app_comic", __name__)
 @app_comic.route('/<cid>/')
 def query_comic_by_id(cid):
     comic = query_db('select * from comic where id = ?', args=(cid), one=True)
+    return comic
+
+
+@app_comic.route('/query/')
+def query_comic_by_url():
+    url = request.json['url']
+    comic = query_db('select * from comic where url = ?', args=(url), one=True)
     return comic
 
 
