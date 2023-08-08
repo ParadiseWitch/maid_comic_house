@@ -1,5 +1,5 @@
 from ast import List
-from typing import List
+# from typing import List
 
 
 class Chapter:
@@ -7,4 +7,4 @@ class Chapter:
     cid: str
     name: str
     url: str
-    images: List[str]
+    images: List[str] = []

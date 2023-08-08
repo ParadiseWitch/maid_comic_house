@@ -13,8 +13,8 @@ from spider.spider import Spider
 
 # host = 'https://www.copymanga.site'
 host = 'https://www.copymanga.tv'
-browser: Browser = None
-page: Page = None
+browser: Browser
+page: Page
 
 
 def initBrowserAndPage():
