@@ -19,7 +19,7 @@ init_db(app)
 
 # 应用结束关闭数据库链接
 @app.teardown_appcontext
-def close_connection():
+def close_connection(e):
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
