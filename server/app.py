@@ -1,17 +1,20 @@
 import os
 import sys
-from flask import Flask, g
-from config.setting import SERVER_PORT
-from api.comic import app_comic
-from api.index import app_index
-from db.db import init_db
 
+from flask import Flask, g
+
+from api.index import app_index
+from api.comic import app_comic
+from api.chapter import app_chapter
+from config.setting import SERVER_PORT
+from db.db import init_db
 
 app = Flask(__name__)
 app.config["JSON_AS_ASCII"] = False  # jsonify返回的中文正常显示
 
 app.register_blueprint(app_index, url_prefix="/")
 app.register_blueprint(app_comic, url_prefix="/comic")
+app.register_blueprint(app_chapter, url_prefix="/chapter")
 
 # 初始化db
 init_db(app)
