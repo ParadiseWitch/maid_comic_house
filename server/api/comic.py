@@ -7,14 +7,14 @@ app_comic = Blueprint("app_comic", __name__)
 
 @app_comic.route('/<cid>/')
 def query_comic_by_id(cid):
-    comic = query_db('select * from comic where id = ?', args=(cid), one=True)
+    comic = query_db('select * from comic where id = ?', args=(cid,), one=True)
     return comic
 
 
 @app_comic.route('/query/')
 def query_comic_by_url():
     url = request.json['url']
-    comic = query_db('select * from comic where url = ?', args=(url), one=True)
+    comic = query_db('select * from comic where url = ?', args=(url,), one=True)
     return comic
 
 
@@ -30,7 +30,7 @@ def add_comic():
             insert into comic
             (site, name, desc, url)
             values (?, ?, ?, ?)
-        """, args=(site, name, desc, url))
+        """, args=(site, name, desc, url,))
     except Exception:
         logging.exception('insert comic error!')
         return {
@@ -55,7 +55,7 @@ def update_comic_by_id(cid):
             update comic
             set site = ?, name = ?, desc = ?, url = ?
             where id = ?
-        """, args=(site, name, desc, url, cid))
+        """, args=(site, name, desc, url, cid,))
     except Exception:
         logging.exception('update comic error!')
         return {

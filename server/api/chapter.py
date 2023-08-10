@@ -9,7 +9,7 @@ app_chapter = Blueprint("app_chapter", __name__)
 
 @app_chapter.route('/<id>/')
 def query_chapter_by_id(id):
-    chapter = query_db('select * from chapter where id = ?', args=id, one=True)
+    chapter = query_db('select * from chapter where id = ?', args=(id,), one=True)
     return chapter
 
 
@@ -22,7 +22,7 @@ def query_chapter_by_url():
 
 @app_chapter.route('/query_by_cid/<cid>/')
 def query_chapters_by_cid(cid):
-    chapters = query_db('select * from chapter where cid = ?', args=(cid), one=False)
+    chapters = query_db('select * from chapter where cid = ?', args=(cid,), one=False)
     return chapters
 
 
