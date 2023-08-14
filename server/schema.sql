@@ -17,3 +17,10 @@ CREATE TABLE chapter (
   url TEXT UNIQUE NOT NULL,
   FOREIGN KEY (cid) REFERENCES comic (id)
 );
+
+CREATE TABLE user (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT,
+);
+
+

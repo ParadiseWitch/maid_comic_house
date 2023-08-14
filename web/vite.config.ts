@@ -17,7 +17,7 @@ export default defineConfig({
     base: './ ', // 生产环境路径
     proxy: {
       '/api': {
-        target: 'http://localhost:8000/',
+        target: 'http://localhost:9999/',
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, '')
       }

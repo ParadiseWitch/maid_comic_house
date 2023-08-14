@@ -1,3 +1,4 @@
 {
-  "reportGeneralTypeIssues": false
+  "reportGeneralTypeIssues": false,
+  "reportOptionalSubscript": false
 }
