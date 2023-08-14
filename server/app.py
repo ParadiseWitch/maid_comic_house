@@ -7,6 +7,7 @@ from api.index import app_index
 from api.comic import app_comic
 from api.chapter import app_chapter
 from api.user import app_user
+from api.image import app_image
 from config.setting import SERVER_PORT
 from db.db import init_db
 
@@ -17,7 +18,7 @@ app.register_blueprint(app_index, url_prefix="/")
 app.register_blueprint(app_comic, url_prefix="/comic")
 app.register_blueprint(app_chapter, url_prefix="/chapter")
 app.register_blueprint(app_user, url_prefix="/user")
-
+app.register_blueprint(app_image, url_prefix="/image")
 # 初始化db
 init_db(app)
 
