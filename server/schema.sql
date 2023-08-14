@@ -20,7 +20,8 @@ CREATE TABLE chapter (
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT,
+  comics TEXT,
+  name TEXT
 );
 
 

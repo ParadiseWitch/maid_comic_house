@@ -37,4 +37,27 @@ sys.path.insert(0, BASE_PATH)  # 将项目根路径临时加入环境变量，�
 
 if __name__ == '__main__':
     # host为主机ip地址，port指定访问端口号，debug=True设置调试模式打开
-    app.run(host="0.0.0.0", port=SERVER_PORT, debug=True)
+    # app.run(host="0.0.0.0", port=SERVER_PORT, debug=True)
+    
+    import json
+    text = """
+    {"comics": [
+        {
+             \"id\": 1,
+             \"last_read\": 10
+        }
+    ]}
+    """
+    j = json.loads(text)
+    print(type(j))
+    print(j)
+
+    s = json.dumps(j)
+    print(type(s))
+    print(s)
+    
+
+
+
+
+    
