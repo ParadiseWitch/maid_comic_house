@@ -1,6 +1,3 @@
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS post;
-
 CREATE TABLE comic (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   site TEXT NOT NULL,
@@ -20,8 +17,9 @@ CREATE TABLE chapter (
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  comics TEXT,
-  name TEXT
+  name TEXT UNIQUE NOT NULL,,
+  password TEXT,
+  comics TEXT
 );
 
 
