@@ -1,8 +1,9 @@
-import { AutoCenter, Button, Input, List, Toast } from "antd-mobile"
-import { EyeInvisibleOutline, EyeOutline } from "antd-mobile-icons"
-import { ListItem } from "antd-mobile/es/components/list/list-item"
-import axios, { AxiosResponse } from "axios"
-import { useState } from "react"
+import { AutoCenter, Button, Input, List, Toast } from 'antd-mobile'
+import { EyeInvisibleOutline, EyeOutline } from 'antd-mobile-icons'
+import { ListItem } from 'antd-mobile/es/components/list/list-item'
+import type { AxiosResponse } from 'axios'
+import axios from 'axios'
+import { useState } from 'react'
 
 function login() {
   const [name, setName] = useState('')
@@ -10,20 +11,19 @@ function login() {
   const [visible, setVisible] = useState(false)
 
   const submit = () => {
-    if (!name) {
+    if (!name)
       Toast.show('用户名不为空')
-    }
-    if (!password) {
-      Toast.show('密码不为空')
-    }
 
-    axios.post('/api/login', { name, password }).then((res :AxiosResponse) => {
+    if (!password)
+      Toast.show('密码不为空')
+
+    axios.post('/api/login', { name, password }).then((_: AxiosResponse) => {
       Toast.show('登录成功')
       // TODO
-    }).catch(err => {
+    }).catch((err) => {
       const msg = err?.response?.data?.message || '请求错误'
       Toast.show(msg)
-      console.warn(msg, err);
+      console.warn(msg, err)
     })
   }
 
@@ -53,7 +53,7 @@ function login() {
             }}>
               <Input
                 value={password}
-                onChange={val => {
+                onChange={(val) => {
                   setPassWord(val)
                 }}
                 style={{ flex: 'auto' }}
@@ -64,13 +64,11 @@ function login() {
                 flex: 'none',
                 marginLeft: 8,
                 padding: 4,
-                cursor: 'pointer'
+                cursor: 'pointer',
               }}>
-                {!visible ? (
-                  <EyeInvisibleOutline onClick={() => setVisible(true)} />
-                ) : (
-                  <EyeOutline onClick={() => setVisible(false)} />
-                )}
+                {!visible
+                  ? (<EyeInvisibleOutline onClick={() => setVisible(true)} />)
+                  : (<EyeOutline onClick={() => setVisible(false)} />)}
               </div>
             </div>
           </List.Item>
