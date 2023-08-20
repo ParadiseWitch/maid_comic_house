@@ -17,7 +17,11 @@ export default defineConfig({
     base: './ ', // 生产环境路径
     proxy: {
       '/api': {
-        target: 'http://localhost:9999/',
+        // https://github.com/vitejs/vite/discussions/7620
+        // nodev17以后要用127.0.0.1
+        target: 'http://127.0.0.1:9999/',
+        // followRedirects需要为true，不然会有奇怪的重定向问题
+        followRedirects: true,
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, ''),
       },
