@@ -1,6 +1,5 @@
-from ast import List
-from comic.chapter import Chapter
-# from typing import List
+from model.chapter import Chapter
+from typing import List
 
 
 class Comic():

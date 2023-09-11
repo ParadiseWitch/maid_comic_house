@@ -8,7 +8,7 @@ from api.comic import app_comic
 from api.chapter import app_chapter
 from api.user import app_user
 from api.image import app_image
-from config.setting import SERVER_PORT
+from setting import SERVER_PORT
 from db.db import init_db
 
 app = Flask(__name__)

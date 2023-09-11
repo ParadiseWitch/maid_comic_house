@@ -7,6 +7,22 @@ import json
 app_user = Blueprint("app_user", __name__)
 
 
+@app_user.route('/login/', methods=['POST'])
+def login():
+    name = request.json['name']
+    password = request.json['password']
+    return {
+        "status": "succ"
+    }
+
+
+@app_user.route('/regist/', methods=['POST'])
+def regist():
+    return {
+        "status": "succ"
+    }
+
+
 @app_user.route('/<uid>/')
 def query_user(uid):
     user = query_db('select * from user where id = ?', args=(uid,), one=True)

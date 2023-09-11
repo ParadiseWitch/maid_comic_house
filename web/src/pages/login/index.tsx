@@ -1,11 +1,13 @@
-import { AutoCenter, Button, Input, List, Toast } from 'antd-mobile'
+import { AutoCenter, Input, List, NavBar, Toast } from 'antd-mobile'
 import { EyeInvisibleOutline, EyeOutline } from 'antd-mobile-icons'
 import { ListItem } from 'antd-mobile/es/components/list/list-item'
-import type { AxiosResponse } from 'axios'
 import axios from 'axios'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function login() {
+  const navigate = useNavigate()
+
   const [name, setName] = useState('')
   const [password, setPassWord] = useState('')
   const [visible, setVisible] = useState(false)
@@ -17,7 +19,7 @@ function login() {
     if (!password)
       Toast.show('密码不为空')
 
-    axios.post('/api/login', { name, password }).then((_: AxiosResponse) => {
+    axios.post('/api/user/login', { name, password }).then(() => {
       Toast.show('登录成功')
       // TODO
     }).catch((err) => {
@@ -25,14 +27,32 @@ function login() {
       Toast.show(msg)
       console.warn(msg, err)
     })
+
+    // fetch('/api/user/login', {
+    //   method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     // 'Content-Type': 'application/x-www-form-urlencoded',
+    //   },
+    //   body: JSON.stringify({ name, password }), // body data type must match "Content-Type" header
+
+    // }).then(res => res.json()).then(res => console.log(res))
   }
 
   return (
     <>
+      <div className='top'>
+        <NavBar back={true} onBack={() => {
+          navigate(-1)
+        }} >
+          Maid漫画屋☕
+        </NavBar >
+      </div>
+
       <div style={{
         display: 'flex',
         flexDirection: 'column',
-        height: '100vh',
+        height: '90vh',
         justifyContent: 'space-evenly',
       }}>
         <List header='' style={{
@@ -43,10 +63,10 @@ function login() {
           <List.Item>
             <AutoCenter>用户登录</AutoCenter>
           </List.Item>
-          <List.Item>
-            <Input placeholder='用户名' value={name} onChange={val => setName(val)} />
+          <List.Item title="用户名">
+            <Input placeholder='请输入用户名' value={name} onChange={val => setName(val)} />
           </List.Item>
-          <List.Item>
+          <List.Item title="密码">
             <div style={{
               display: 'flex',
               alignItems: 'center',
@@ -57,7 +77,7 @@ function login() {
                   setPassWord(val)
                 }}
                 style={{ flex: 'auto' }}
-                placeholder='密码'
+                placeholder='请输入密码'
                 type={visible ? 'text' : 'password'}
               />
               <div style={{
@@ -72,10 +92,19 @@ function login() {
               </div>
             </div>
           </List.Item>
-          <ListItem>
-            <Button block type='submit' color='primary' size='large' onClick={submit}>
-              提交
-            </Button>
+          <ListItem
+            style={{ background: '#c9dffd' }}
+            arrow={false}
+            clickable={true}
+            onClick={submit}>
+            <AutoCenter>提交</AutoCenter>
+          </ListItem>
+          <ListItem
+            style={{ background: '#eee' }}
+            arrow={false}
+            clickable={true}
+            onClick={() => { navigate('/regist') }}>
+            <AutoCenter>注册</AutoCenter>
           </ListItem>
         </List>
       </div>

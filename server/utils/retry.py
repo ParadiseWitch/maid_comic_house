@@ -1,5 +1,3 @@
-
-
 import logging
 import traceback
 
@@ -14,7 +12,7 @@ def retry(fn, on_error=lambda: ()):
             i = i+1
             err = e
             traceback.print_exc()
-            logging.warn('重试第{}次报错, e={}'.format(i,e))
+            logging.warn('重试第{}次报错, e={}'.format(i, e))
             continue
     on_error()
     logging.error('重试三次报错', e)

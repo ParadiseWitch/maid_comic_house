@@ -19,7 +19,7 @@ export default defineConfig({
       '/api': {
         // https://github.com/vitejs/vite/discussions/7620
         // nodev17以后要用127.0.0.1
-        target: 'http://127.0.0.1:9999/',
+        target: 'http://127.0.0.1:8000/',
         // followRedirects需要为true，不然会有奇怪的重定向问题
         followRedirects: true,
         changeOrigin: true,

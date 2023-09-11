@@ -3,14 +3,13 @@ import os
 import uuid
 from isort import file
 from playwright.sync_api import Playwright, Browser, Page
-from py import log
 import requests
 
-from comic.chapter import Chapter
-from comic.comic import Comic
-from config import DOWNLOAD_PATH
-from db.db import query_comic_by_url, update_comic
+from model.chapter import Chapter
+from model.comic import Comic
+from setting import DOWNLOAD_PATH
 from spider.spider import Spider
+from db.db import query_comic_by_url, update_comic
 from utils.retry import retry
 
 
@@ -41,7 +40,7 @@ class CopyComicSpider(Spider):
         logging.info('=============================开始下载漫画，url={}'.format(url))
         # 查数据库
         comic = query_comic_by_url(url)
-        if(comic == None):
+        if (comic == None):
             comic = Comic()
             comic.url = url
             comic.site = self.site
@@ -89,7 +88,7 @@ class CopyComicSpider(Spider):
         chapter = Chapter()
         chapter.url = url
 
-        if(self.chapter_page != None):
+        if (self.chapter_page != None):
             self.chapter_page.close()
         self.chapter_page: Page = self.browser.new_page()
 
@@ -132,7 +131,7 @@ class CopyComicSpider(Spider):
                 'body > div > .comicIndex', 'el => el.innerText'))
             logging.info('当前页数, img_index={}'.format(img_index))
 
-            if(img_index >= imgs_len):
+            if (img_index >= imgs_len):
                 return
             scroll_to_bottom()
 

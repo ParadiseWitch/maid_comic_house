@@ -3,24 +3,21 @@ import logging
 import os
 import time
 from playwright.sync_api import Playwright, sync_playwright, Browser, Page
-from py import log
-from tomlkit import date
 
-from comic.chapter import Chapter
-from config import DOWNLOAD_PATH
+from setting import DOWNLOAD_PATH
 from spider.copy_comic_spider import CopyComicSpider
 from spider.spider import Spider
 
 # host = 'https://www.copymanga.site'
-host = 'https://www.copymanga.tv'
+# host = 'https://www.copymanga.tv'
 browser: Browser
 page: Page
 
 
 def initBrowserAndPage():
-    global browser, page, playwright
-    if (browser and page):
-        return
+    global browser, page
+    # if (browser != None and page != None):
+    #     return
     browser = playwright.chromium.launch(headless=True)
     page = browser.new_page()
     page.set_default_navigation_timeout(30000)
@@ -54,9 +51,9 @@ def spider_chapter_by_url(url: str, site: str):
 
 def run(playwright: Playwright) -> None:
     site = 'copymanga'
-    # url = 'https://www.copymanga.tv/comic/monvyushimo'
+    url = 'https://www.copymanga.tv/comic/haizeiwang'
     # url = 'https://www.copymanga.tv/comic/chubaowangnv'
-    # spider_comic_all_chapter(url, site)
+    spider_comic_all_chapter(url, site)
     # url = 'https://www.copymanga.tv/comic/chaoziranwuzhuangdangdadang'
     # spider_comic_all_chapter(url, site)
     # url = 'https://www.copymanga.tv/comic/jijubukesiyiyanjioubu'
@@ -71,10 +68,10 @@ def run(playwright: Playwright) -> None:
     # spider_comic_all_chapter(url, site)
     # url = 'https://www.copymanga.tv/comic/xihuanderenwangjidaiyanjle'
     # spider_comic_all_chapter(url, site,site)
-    url = 'https://www.copymanga.tv/comic/wodantuidenvhai/chapter/8148b03c-0699-11ee-a881-d3d228a76de6'
-    spider_chapter_by_url(url, site)
-    url = 'https://www.copymanga.tv/comic/wodantuidenvhai/chapter/ef0a84a8-0b24-11ee-aa3f-d3d228a76de6'
-    spider_chapter_by_url(url, site)
+    # url = 'https://www.copymanga.tv/comic/wodantuidenvhai/chapter/8148b03c-0699-11ee-a881-d3d228a76de6'
+    # spider_chapter_by_url(url, site)
+    # url = 'https://www.copymanga.tv/comic/wodantuidenvhai/chapter/ef0a84a8-0b24-11ee-aa3f-d3d228a76de6'
+    # spider_chapter_by_url(url, site)
 
     # spider_chapter_by_url(url, site)
 
