@@ -13,3 +13,6 @@ output
 venv
 
 *.db
+
+.idea
+*.iml

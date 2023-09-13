@@ -1,9 +1,12 @@
 import logging
 import os
+import sys
+from typing import List, Callable
+
 import requests
 from playwright.sync_api import Playwright, Browser, Page
 
-from db.comic_db import query_comic_by_url, update_comic
+from db.comic_db import update_comic
 from model.chapter import Chapter
 from model.comic import Comic
 from setting import DOWNLOAD_PATH
@@ -11,88 +14,92 @@ from spider.spider import Spider
 from utils.retry import retry
 
 
-class CopyComicSpider(Spider):
+class CopymangaSpider(Spider):
+    browser: Browser
+    page: Page
+    playwright: Playwright
     host = 'https://www.copymanga.tv'
     # host = 'https://www.copymanga.site'
     site = 'copymanga'
-
     browser: Browser = None
     page: Page = None
     chapter_page: Page = None
     playwright: Playwright
 
-    def __init__(self, browser, page, playwright) -> None:
-        self.browser = browser
-        self.page = page
+    def __init__(self, playwright: Playwright) -> None:
         self.playwright = playwright
 
-    def spider_comic_all_chapter(self, url: str, start: int = 0, end: int = 1000):
-        self.spider_comic_by_url(url, start, end)
+    def init_browser_and_page(self):
+        if self.browser is not None and self.page is not None:
+            return
+        self.browser = self.playwright.chromium.launch(headless=True)
+        self.page = self.browser.new_page()
+        self.page.set_default_navigation_timeout(30000)
+        self.page.set_viewport_size({'width': 1920, 'height': 1080})
 
-    def spider_comic_by_url(self, url: str, start: int = 0, end: int = 1000):
+    def close_browser_and_page(self):
+        self.browser.close()
+        self.page.close()
+
+    def spider_base_comic_info_by_url(self):
         """
-        爬全部漫画，接着数据库没有的爬
+        根据url爬取基本漫画信息
+        :return:
         """
-        logging.info(
-            '========================================================')
-        logging.info('=============================开始下载漫画，url={}'.format(url))
-        # 查数据库
-        comic = query_comic_by_url(url)
-        if comic is None:
-            comic = Comic()
-            comic.url = url
-            comic.site = self.site
-            comic.id = url.split('/')[-1]
+        pass
 
-        self.page.goto(url, wait_until='load', timeout=30000)
-        logging.info('访问url成功:{}'.format(url))
-
+    def spider_comic(self, comic: Comic, range_fn: Callable[[List], List] = lambda arr: arr[0:sys.maxsize]):
+        """
+        爬全部漫画
+        """
+        logging.info('开始下载漫画,url={}'.format(comic.url))
+        self.page.goto(comic.url, wait_until='load', timeout=30000)
         comic.name = self.page.eval_on_selector(
             selector='.row > .col-9 > ul > li > h6',
             expression='el => el.textContent || "暂无标题"')
         logging.info('漫画名:{}'.format(comic.name))
-
-        # TODO 可能要翻页
-        chapter_list = self.page.eval_on_selector_all(
+        chapter_name_and_url_list = self.page.eval_on_selector_all(
             selector='#default全部 ul:first-child a',
             expression="""
-            (els, host) =>
-              els.map(el => {
-                return {
-                  url: host + el.getAttribute('href'),
-                  title: el.textContent || '暂无标题'
-                }
-              })
-            """,
+                (els, host) =>
+                  els.map(el => {
+                    return {
+                      url: host + el.getAttribute('href'),
+                      title: el.textContent || '暂无标题'
+                    }
+                  })
+                """,
             arg=self.host)
 
-        comic.len = len(chapter_list)
-        logging.info('漫画所有章节len={},hapter_list={}'.format(
-            comic.len, chapter_list))
-
-        # 更新comic到数据库
+        comic.len = len(chapter_name_and_url_list)
+        logging.info('漫画所有章节len={},chapter_list={}'.format(comic.len, chapter_name_and_url_list))
+        # 更新comic到数据库 # TODO 耦合
         update_comic(comic)
+        target_chapter_name_and_url_list = range_fn(chapter_name_and_url_list)
 
-        # 只爬取部分
-        chapter_list = chapter_list[start:end]
+        def map_chapter_list(chapter_name_and_url):
+            chapter_url = chapter_name_and_url['url']
+            chapter_name = chapter_name_and_url['name']
+            chapter = Chapter()
+            chapter.cid = comic.id
+            chapter.url = chapter_url
+            chapter.name = chapter_name
+            chapter.images = []
+            return chapter
+
+        target_chapter_list = list(map(map_chapter_list, target_chapter_name_and_url_list))
         logging.info('开始爬取章节')
-        for chapter_item in chapter_list:
-            retry(lambda: self.spider_chapter_by_url(chapter_item['url']))
-        logging.info('爬取章节完毕')
-        logging.info('漫画{}下载完成'.format(comic.name))
+        for chapter_item in target_chapter_list:
+            retry(lambda: self.spider_chapter_by_url(chapter_item))
 
-    def spider_chapter_by_url(self, url: str):
-        logging.info(
-            '========================================================')
-        logging.info('=============================开始下载章节，url={}'.format(url))
-        chapter = Chapter()
-        chapter.url = url
+    def spider_chapter_by_url(self, chapter: Chapter):
+        logging.info('开始下载章节,name={},url={}'.format(chapter.name, chapter.url))
 
         if self.chapter_page is not None:
             self.chapter_page.close()
         self.chapter_page: Page = self.browser.new_page()
 
-        retry(lambda: self.chapter_page.goto(url))
+        retry(lambda: self.chapter_page.goto(chapter.url))
         self.chapter_page.set_viewport_size({'width': 1920, 'height': 1080})
         logging.info('访问章节url成功，url={}'.format(chapter.url))
 
@@ -123,7 +130,6 @@ class CopyComicSpider(Spider):
         logging.info('漫画内容容器的Dom节点加载成功')
 
         # 一直滚动到加载最后一页
-
         def scroll_to_bottom():
             self.chapter_page.keyboard.press('PageDown')
             retry(lambda: self.chapter_page.wait_for_timeout(100))
@@ -148,7 +154,7 @@ class CopyComicSpider(Spider):
         chapter.images = img_urls
         logging.info('本章节的所有图片链接，urls={}'.format(chapter.images))
 
-        # TODO保存chapter到数据库
+        # TODO 保存chapter到数据库
         def down_image(img_url: str, index: int):
             """下载文件的方法
             """
@@ -162,13 +168,13 @@ class CopyComicSpider(Spider):
                 os.makedirs(down_file_dir)
                 logging.info('创建下载文件夹，path={}'.format(down_file_dir))
 
-            target_file_path = down_file_dir+"/" + file_name
+            target_file_path = down_file_dir + "/" + file_name
             if os.path.exists(target_file_path) and os.path.getsize(target_file_path) > 0:
                 logging.info(
                     '图片已存在, target_file_path={}'.format(target_file_path))
                 return
 
-            r = requests.get(img_url, timeout=3*60)
+            r = requests.get(img_url, timeout=3 * 60)
             with open(target_file_path, "wb") as f:
                 f.write(r.content)
             logging.info('下载图片成功！url={}, target_file_path={}'.format(
@@ -176,7 +182,7 @@ class CopyComicSpider(Spider):
 
         index = 0
         for url in img_urls:
-            index = index+1
+            index = index + 1
             retry(lambda: down_image(url, index))
 
         logging.info('关闭章节页面成功！章节名，name={}'.format(chapter.name))

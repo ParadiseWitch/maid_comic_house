@@ -1,11 +1,10 @@
-from encodings import utf_8
 import logging
 import os
 import time
 from playwright.sync_api import Playwright, sync_playwright, Browser, Page
 
 from setting import DOWNLOAD_PATH
-from spider.copy_comic_spider import CopyComicSpider
+from spider.copymanga_spider import CopymangaSpider
 from spider.spider import Spider
 
 # host = 'https://www.copymanga.site'
@@ -27,15 +26,16 @@ def init_browser_and_page():
 
 def get_spider_by_site(site: str) -> Spider:
     if site == 'copymanga':
-        return CopyComicSpider(browser, page, playwright)
+        return CopymangaSpider(playwright)
     raise ValueError('没有找到对应站点的爬虫器！')
 
 
-def spider_comic_all_chapter(comic_id: str, site: str, start: int = 0, end: int = 1000):
-    init_browser_and_page()
-    # 根据site得到spider
+def spider_comic_all_chapter(comic_id: str, site: str, range_fn):
     spider = get_spider_by_site(site)
-    spider.spider_comic_all_chapter(comic_id, start, end)
+    # 初始化
+    spider.init_browser_and_page()
+    # TODO 根据site得到spider
+    spider.spider_comic(comic_id, range_fn)
 
 
 def spider_chapter_by_url(url: str, site: str):
