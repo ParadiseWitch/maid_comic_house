@@ -1,15 +1,13 @@
 import logging
 import os
-import uuid
-from isort import file
-from playwright.sync_api import Playwright, Browser, Page
 import requests
+from playwright.sync_api import Playwright, Browser, Page
 
+from db.comic_db import query_comic_by_url, update_comic
 from model.chapter import Chapter
 from model.comic import Comic
 from setting import DOWNLOAD_PATH
 from spider.spider import Spider
-from db.db import query_comic_by_url, update_comic
 from utils.retry import retry
 
 
@@ -28,19 +26,19 @@ class CopyComicSpider(Spider):
         self.page = page
         self.playwright = playwright
 
-    def spider_comic_all_chapter(self, url: str):
-        self.spider_comic_by_url(url)
+    def spider_comic_all_chapter(self, url: str, start: int = 0, end: int = 1000):
+        self.spider_comic_by_url(url, start, end)
 
-    def spider_comic_by_url(self, url: str):
-        '''
+    def spider_comic_by_url(self, url: str, start: int = 0, end: int = 1000):
+        """
         爬全部漫画，接着数据库没有的爬
-        '''
+        """
         logging.info(
             '========================================================')
         logging.info('=============================开始下载漫画，url={}'.format(url))
         # 查数据库
         comic = query_comic_by_url(url)
-        if (comic == None):
+        if comic is None:
             comic = Comic()
             comic.url = url
             comic.site = self.site
@@ -75,6 +73,8 @@ class CopyComicSpider(Spider):
         # 更新comic到数据库
         update_comic(comic)
 
+        # 只爬取部分
+        chapter_list = chapter_list[start:end]
         logging.info('开始爬取章节')
         for chapter_item in chapter_list:
             retry(lambda: self.spider_chapter_by_url(chapter_item['url']))
@@ -88,7 +88,7 @@ class CopyComicSpider(Spider):
         chapter = Chapter()
         chapter.url = url
 
-        if (self.chapter_page != None):
+        if self.chapter_page is not None:
             self.chapter_page.close()
         self.chapter_page: Page = self.browser.new_page()
 
@@ -131,7 +131,7 @@ class CopyComicSpider(Spider):
                 'body > div > .comicIndex', 'el => el.innerText'))
             logging.info('当前页数, img_index={}'.format(img_index))
 
-            if (img_index >= imgs_len):
+            if img_index >= imgs_len:
                 return
             scroll_to_bottom()
 
@@ -149,10 +149,9 @@ class CopyComicSpider(Spider):
         logging.info('本章节的所有图片链接，urls={}'.format(chapter.images))
 
         # TODO保存chapter到数据库
-
-        # 下载文件的方法
-
         def down_image(img_url: str, index: int):
+            """下载文件的方法
+            """
             file_name = '第{}页'.format(index)
             ext = img_url.split('.')[-1]
             file_name = '{}.{}'.format(file_name, ext)

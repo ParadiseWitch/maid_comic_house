@@ -7,6 +7,7 @@ from db.db import query_db, update_db
 
 app_chapter = Blueprint("app_chapter", __name__)
 
+
 @app_chapter.route('/<id>/')
 def query_chapter_by_id(id):
     chapter = query_db('select * from chapter where id = ?', args=(id,), one=True)

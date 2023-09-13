@@ -9,11 +9,11 @@ def retry(fn, on_error=lambda: ()):
         try:
             return fn()
         except Exception as e:
-            i = i+1
             err = e
             traceback.print_exc()
-            logging.warn('重试第{}次报错, e={}'.format(i, e))
+            logging.warning('重试第{}次报错, e={}'.format(i, e))
+            i = i+1
             continue
     on_error()
-    logging.error('重试三次报错', e)
+    logging.error('重试三次报错', err)
     raise ValueError('重试三次失败', err)
