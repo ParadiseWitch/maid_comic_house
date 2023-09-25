@@ -9,6 +9,7 @@ from playwright.sync_api import Playwright, Browser, Page
 from db.comic_db import update_comic
 from model.chapter import Chapter
 from model.comic import Comic
+from model.img import Img
 from setting import DOWNLOAD_PATH
 from spider.spider import Spider
 from utils.retry import retry
@@ -71,23 +72,24 @@ class CopymangaSpider(Spider):
                 """,
             arg=self.host)
 
-        comic.len = len(chapter_name_and_url_list)
-        logging.info('漫画所有章节len={},chapter_list={}'.format(comic.len, chapter_name_and_url_list))
+        logging.info('漫画所有章节len={},chapter_list={}'.format(
+            len(chapter_name_and_url_list), chapter_name_and_url_list))
         # 更新comic到数据库 # TODO 耦合
         update_comic(comic)
         target_chapter_name_and_url_list = range_fn(chapter_name_and_url_list)
 
-        def map_chapter_list(chapter_name_and_url):
+        def map_chapter_list(chapter_name_and_url) -> Chapter:
             chapter_url = chapter_name_and_url['url']
             chapter_name = chapter_name_and_url['name']
             chapter = Chapter()
             chapter.cid = comic.id
             chapter.url = chapter_url
             chapter.name = chapter_name
-            chapter.images = []
+            chapter.imgs = []
             return chapter
 
-        target_chapter_list = list(map(map_chapter_list, target_chapter_name_and_url_list))
+        target_chapter_list = list(
+            map(map_chapter_list, target_chapter_name_and_url_list))
         logging.info('开始爬取章节')
         for chapter_item in target_chapter_list:
             retry(lambda: self.spider_chapter_by_url(chapter_item))
@@ -151,8 +153,9 @@ class CopymangaSpider(Spider):
             '.container-fluid > .container > .comicContent-list > li > img',
             'els => els.map(el => el.getAttribute("data-src"))')
 
-        chapter.images = img_urls
-        logging.info('本章节的所有图片链接，urls={}'.format(chapter.images))
+        imgs = list(map(lambda e: Img(url=e)))
+        chapter.imgs = imgs
+        logging.info('本章节的所有图片链接，urls={}'.format(img_urls))
 
         # TODO 保存chapter到数据库
         def down_image(img_url: str, index: int):
