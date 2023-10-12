@@ -13,6 +13,8 @@ class Comic:
     desc: str
     author: Author
     tags: List[Tag] = []
+    last_update_date: str
+    start_date: str
     chapters: List[Chapter] = []
 
     def __init__(self, site, url, name, desc) -> None:
