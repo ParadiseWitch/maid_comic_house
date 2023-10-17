@@ -18,7 +18,7 @@ function comicList(props: ComicListPType) {
     <div className='comic-list'>
       {
         props.comicList.map((comic, index) =>
-          <Badge key={index} content='new' style={{ '--right': '15%', '--top': '5%' }}>
+          <Badge key={index} content='new' style={{ '--right': '10%', '--top': '5%' }}>
             <ComicItem title={comic.title} cover={comic.cover} layout={'grid'} />
           </Badge>,
         )

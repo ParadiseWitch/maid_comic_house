@@ -1,4 +1,4 @@
-.cover-container{
+.cover-container {
   width: 36vw;
   height: 50vw;
   /* background: #eee; */
@@ -6,15 +6,15 @@
   /* color: #999999; */
   overflow: hidden;
 }
-.cover{
+.cover {
   margin: 2px;
   height: 100%;
   border-radius: 10px;
   overflow: hidden;
 }
 
-.info-txt{
+.info-txt {
   width: 100%;
-  font-size: 10px;
+  font-size: 15px;
   padding-bottom: 5px;
 }
