@@ -23,7 +23,11 @@ class Spider(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def spider_base_comic_info_by_url(self, cid: str):
+    def get_url(self, comic_id:str):
+        pass
+
+    @abstractmethod
+    def spider_base_comic_info(self, comic_id: str):
         pass
 
     @abstractmethod
