@@ -1,5 +1,5 @@
 from typing import List
-from model.img import Img
+from model.image import Image
 
 
 class Chapter:
@@ -7,9 +7,9 @@ class Chapter:
     cid: str
     name: str
     url: str
-    imgs: List[Img] = []
+    imgs: List[Image] = []
 
-    def __init__(self, cid, name, url) -> None:
+    def __init__(self, cid: str, url: str, name: str = None):
         self.cid = cid
-        self.name = name
         self.url = url
+        self.name = name

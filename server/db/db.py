@@ -25,7 +25,8 @@ def get_db():
 
 
 def query_db(query, args=(), one=False):
-    cur = get_db().execute(query, args)
+    db = get_db()
+    cur = db.execute(query, args)
     rv = cur.fetchall()
     cur.close()
     return (rv[0] if rv else None) if one else rv
@@ -33,9 +34,18 @@ def query_db(query, args=(), one=False):
 
 def update_db(sql, args=()):
     db = get_db()
-    db.execute(sql, args)
+    cur = db.execute(sql, args)
     db.commit()
-    db.close()
+    cur.close()
+
+
+def insert_db(sql, args=()):
+    db = get_db()
+    cur = db.execute(sql, args)
+    db.commit()
+    insert_id = cur.lastrowid
+    cur.close()
+    return insert_id
 
 
 def make_dicts(cursor, row):

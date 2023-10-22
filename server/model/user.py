@@ -1,11 +1,11 @@
-from model.img import Img
+from model.image import Image
 
 
 class User:
     id: str
     name: str
     password: str
-    avatar: Img
+    avatar: Image
     role: int
 
     def __init__(self, name, password) -> None:

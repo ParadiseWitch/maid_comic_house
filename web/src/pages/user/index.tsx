@@ -40,7 +40,6 @@ const user: FC = (_props) => {
             {!isEditingUserName && <EditSOutline onClick={() => { setIsEditingUserName(true) }}/>}
             {isEditingUserName && <Input className='font-size-2' placeholder='请输入用户名'></Input>}
             {isEditingUserName && <CheckCircleOutline onClick={() => { setIsEditingUserName(false) }}/>}
-
           </Space>
           {/* </div> */}
         </div>

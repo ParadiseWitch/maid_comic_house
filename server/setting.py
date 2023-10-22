@@ -6,4 +6,7 @@ DATABASE = 'maid_comic_house.db'
 
 
 # spider
-DOWNLOAD_PATH = 'D:/WorkArea/code/maid_comic_house/output'
+COMIC_PATH = r'D:\Autobangumi\qbittorrent\downloads\comic'
+
+# mlogger
+LOGGER_PATH = 'D:/WorkArea/code/maid_comic_house/output/logs'

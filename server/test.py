@@ -1,10 +1,10 @@
-from logger import logger
+from logger import mlogger
 
 
 def test_log():
-    logger.error('error')
-    logger.warning('warn')
-    logger.info('info')
+    mlogger.error('error')
+    mlogger.warning('warn')
+    mlogger.info('info')
 
 
 if __name__ == '__main__':

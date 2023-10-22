@@ -4,9 +4,9 @@ import os
 import time
 from logging.handlers import TimedRotatingFileHandler
 
-from setting import DOWNLOAD_PATH
+from setting import LOGGER_PATH
 
-logger: logging.Logger
+mlogger: logging.Logger
 
 
 class LogFilter:
@@ -60,12 +60,12 @@ class TimeLoggerRolloverHandler(TimedRotatingFileHandler):
         self.rolloverAt = new_rollover_at
 
 
-logs_dir = '{}/logs'.format(DOWNLOAD_PATH)
+logs_dir = LOGGER_PATH
 if not os.path.exists(logs_dir):
     os.makedirs(logs_dir)
 
-logger = logging.getLogger('logger')
-logger.setLevel(logging.DEBUG)
+mlogger = logging.getLogger('mlogger')
+mlogger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s | %(levelname)8s | %(module)s | [%(filename)s:%(lineno)d]: %(message)s',
                               datefmt='%Y-%m-%d %H:%M:%S')
 
@@ -89,13 +89,13 @@ info_handel.setFormatter(formatter)
 info_handel.addFilter(LogFilter.info_filter)
 info_handel.setLevel(logging.INFO)
 
-logger.addHandler(error_handler)
-logger.addHandler(warning_handler)
-logger.addHandler(info_handel)
+mlogger.addHandler(error_handler)
+mlogger.addHandler(warning_handler)
+mlogger.addHandler(info_handel)
 
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
 ch.setFormatter(formatter)
-logger.addHandler(ch)
+mlogger.addHandler(ch)
 
-__all__ = [logger]
+__all__ = [mlogger]
