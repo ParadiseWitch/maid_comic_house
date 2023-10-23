@@ -15,23 +15,14 @@ class Spider(metaclass=ABCMeta):
     site: str
 
     @abstractmethod
-    def init_browser_and_page(self):
-        pass
-
-    @abstractmethod
-    def close_browser_and_page(self):
-        pass
-
-    @abstractmethod
-    def get_url(self, comic_id:str):
-        pass
-
-    @abstractmethod
     def spider_base_comic_info(self, comic_id: str):
         pass
 
+    def spider_chapter_list(self, comic_id: str):
+        pass
+
     @abstractmethod
-    def spider_comic(self, comic: Comic, range_fn: Callable[[List], List]):
+    def spider_comic(self, comic_id: str):
         pass
 
     @abstractmethod
