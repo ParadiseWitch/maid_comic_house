@@ -7,7 +7,7 @@ from playwright.sync_api import Playwright, Browser, Page, sync_playwright
 
 from logger import mlogger
 from db.comic_db import update_comic
-from db.db import query_db
+from db.db import insert_db, query_db
 from model.chapter import Chapter
 from model.comic import Comic, ComicStatus
 from model.image import Image
@@ -46,12 +46,33 @@ class CopymangaSpider(Spider):
         self.browser.close()
         self.page.close()
 
+    def spider_chapter_list(self, comic_id: str):
+        comic_url = self.get_url(comic_id)
+        self.page.goto(comic_url, wait_until='load', timeout=30000)
+        chapter_name_and_url_list = self.page.eval_on_selector_all(
+            selector='#default全部 ul:first-child a',
+            expression="""
+                (els, host) =>
+                  els.map(el => {
+                    return {
+                      url: host + el.getAttribute('href'),
+                      title: el.textContent || '暂无标题'
+                    }
+                  })
+                """,
+            arg=self.host)
+
+        mlogger.info('漫画所有章节len={},chapter_list={}'.format(
+            len(chapter_name_and_url_list), chapter_name_and_url_list))
+        return chapter_name_and_url_list
+
     def spider_base_comic_info(self, comic_id: str):
         """
         根据url爬取基本漫画信息
         :return:
         """
-        comic = query_db('select * from comic where id = ?', comic_id, one=True)
+        comic = query_db('select * from comic where id = ?',
+                         comic_id, one=True)
         if comic is not None:
             mlogger.warning('查询到comic_id={}的漫画已存在。不用再次爬取'.format(comic_id))
             return
@@ -93,27 +114,27 @@ class CopymangaSpider(Spider):
         comic.start_date = None
         comic.status = ComicStatus.get_comic_status(comic_status)
         # TODO 先查后插入
-        query_db('select * from comic where id = ?', comic_id, one=True)
-        comic.authors = authors
-        comic.authors = tags
+        for author_name in authors:
+            author = query_db('select * from author where name = ?',
+                              author_name, one=True)
+            if author is None:
+                insert_db(
+                    'insert into author (name) values (?)', author_name)
+                author = query_db('select * from author where name = ?',
+                                  author_name, one=True)
+            comic.authors.append(author['id'])
+
+        for tag_name in tags:
+            tag = query_db('select * from tag where name = ?',
+                           tag_name, one=True)
+            if tag is None:
+                insert_db(
+                    'insert into tag (name) values (?)', tag_name)
+                tag = query_db('select * from tag where name = ?',
+                               tag_name, one=True)
+            comic.tag.append(author['id'])
+
         update_comic(comic)
-
-        chapter_name_and_url_list = self.page.eval_on_selector_all(
-            selector='#default全部 ul:first-child a',
-            expression="""
-                (els, host) =>
-                  els.map(el => {
-                    return {
-                      url: host + el.getAttribute('href'),
-                      title: el.textContent || '暂无标题'
-                    }
-                  })
-                """,
-            arg=self.host)
-
-        mlogger.info('漫画所有章节len={},chapter_list={}'.format(
-            len(chapter_name_and_url_list), chapter_name_and_url_list))
-        return chapter_name_and_url_list
 
 
 def spider_comic(self, comic_id: str):
@@ -200,7 +221,8 @@ def spider_chapter_by_url(self, url: str):
     imgs = []
     for index, item in enumerate(img_urls):
         imgs.append(Image(url=item, name='第{}页'.format(index)))
-    imgs = [Image(url=item, name='第{}页'.format(index)) for index, item in enumerate(img_urls)]
+    imgs = [Image(url=item, name='第{}页'.format(index))
+            for index, item in enumerate(img_urls)]
 
     chapter.imgs = imgs
     mlogger.info('本章节的所有图片链接，urls={}'.format(img_urls))
