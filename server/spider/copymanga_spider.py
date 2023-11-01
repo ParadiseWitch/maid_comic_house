@@ -6,11 +6,13 @@ from playwright.sync_api import sync_playwright
 from db.db import insert_db, query_db
 from logger import mlogger
 from model.chapter import Chapter
+from model.comic import ComicStatus
 from model.image import Image
 from setting import COMIC_PATH
 from spider.spider import Spider
 from utils.retry import retry
 
+# TODO 支持事务
 
 class CopymangaSpider(Spider):
     host = 'https://www.copymanga.tv'
@@ -29,7 +31,7 @@ class CopymangaSpider(Spider):
         comic = query_db('select * from comic where id = ?',
                          (comic_id,), one=True)
         if comic is not None:
-            mlogger.warning('查询到comic_id={}的漫画已存在，不用再次爬取。'.format(comic_id))
+            mlogger.warning('查询到comic_id={}的漫画基本信息已存在，不用再次爬取。'.format(comic_id))
             return
         comic_url = CopymangaSpider.get_url(comic_id)
 
@@ -58,9 +60,9 @@ class CopymangaSpider(Spider):
                 insert into comic (id, name,site,desc,url,authors,tags,last_update_date,start_date,status) 
                 values (?,?,?,?,?,?,?,?,?,?)
                 """, (comic_id, comic_name, self.site,
-                      comic_desc, comic_url, comic_authors,
-                      comic_tags, last_update_date, None,
-                      comic_status), )
+                      comic_desc, comic_url, ','.join(str(n) for n in comic_authors),
+                      ','.join(str(n) for n in comic_tags), last_update_date, None,
+                      comic_status.value,))
 
             # 关闭页面和浏览器
             page.close()
@@ -210,15 +212,17 @@ class CopymangaSpider(Spider):
         last_update_date = page.eval_on_selector(
             selector='ul > li:nth-child(5) > span.comicParticulars-right-txt',
             expression='el => el.textContent')
+        # TODO 日期转换
         return last_update_date
 
     @staticmethod
     def get_comic_tags(page):
-        tags = page.eval_on_selector_all(
+        tags_with_pound = page.eval_on_selector_all(
             selector='span.comicParticulars-left-theme-all.comicParticulars-tag > a',
             expression="""
                     (els) => els.map(el => el.textContent)
                     """, )
+        tags = (tag[1:] for tag in tags_with_pound)
         return tags
 
     @staticmethod
@@ -249,12 +253,12 @@ class CopymangaSpider(Spider):
         comic_tags = []
         for tag_name in tags:
             tag = query_db('select * from tag where name = ?',
-                           tag_name, one=True)
+                           (tag_name,), one=True)
             if tag is None:
                 insert_db(
-                    'insert into tag (name) values (?)', tag_name)
+                    'insert into tag (name) values (?)', (tag_name,))
                 tag = query_db('select * from tag where name = ?',
-                               tag_name, one=True)
+                               (tag_name,), one=True)
             comic_tags.append(tag['id'])
         return comic_tags
 
@@ -263,21 +267,22 @@ class CopymangaSpider(Spider):
         comic_authors = []
         for author_name in authors:
             author = query_db('select * from author where name = ?',
-                              author_name, one=True)
+                              (author_name,), one=True)
             if author is None:
                 insert_db(
-                    'insert into author (name) values (?)', author_name)
+                    'insert into author (name) values (?)', (author_name,))
                 author = query_db('select * from author where name = ?',
-                                  author_name, one=True)
+                                  (author_name,), one=True)
             comic_authors.append(author['id'])
         return comic_authors
 
     @staticmethod
-    def get_comic_status(page):
+    def get_comic_status(page) -> ComicStatus:
         comic_status = page.eval_on_selector(
             selector='ul > li:nth-child(6) > span.comicParticulars-right-txt',
             expression='el => el.textContent')
-        return comic_status
+        status = ComicStatus.get_comic_status(comic_status)
+        return status
 
     @staticmethod
     def scroll_to_bottom(page, imgs_len: int):
