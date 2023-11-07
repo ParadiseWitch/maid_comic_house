@@ -17,7 +17,7 @@ playwright: Playwright
 
 def init_browser_and_page():
     global browser, page
-    # if (browser != None and page != None):
+    # if (browser != None and chapter_page != None):
     #     return
     browser = playwright.chromium.launch(headless=True)
     page = browser.new_page()

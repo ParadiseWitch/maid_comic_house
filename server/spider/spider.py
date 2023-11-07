@@ -15,7 +15,7 @@ class Spider(metaclass=ABCMeta):
     site: str
 
     @abstractmethod
-    def spider_base_comic_info(self, comic_id: str):
+    def spider_base_comic_info(self, comic_url: str):
         pass
 
     def spider_chapter_list(self, comic_id: str):
@@ -26,5 +26,5 @@ class Spider(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def spider_chapter_by_url(self, url: str):
+    def spider_chapter_by_url(self, chapter_url: str):
         pass
