@@ -1,11 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import Callable, List
-
 from playwright.sync_api import Playwright, Browser, Page
-
-from model.chapter import Chapter
-from model.comic import Comic
-
 
 class Spider(metaclass=ABCMeta):
     browser: Browser
@@ -15,7 +9,7 @@ class Spider(metaclass=ABCMeta):
     site: str
 
     @abstractmethod
-    def spider_base_comic_info(self, comic_url: str):
+    def spider_base_comic_info(self, comic_id: str):
         pass
 
     def spider_chapter_list(self, comic_id: str):

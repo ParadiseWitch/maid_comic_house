@@ -5,9 +5,9 @@ from db.db import query_db, update_db
 app_comic = Blueprint("app_comic", __name__)
 
 
-@app_comic.route('/<cid>/')
-def query_comic_by_id(cid):
-    comic = query_db('select * from comic where id = ?', args=(cid,), one=True)
+@app_comic.route('/<id>/')
+def query_comic_by_id(id):
+    comic = query_db('select * from comic where id = ?', args=(id,), one=True)
     return comic
 
 
@@ -20,6 +20,7 @@ def query_comic_by_url():
 
 @app_comic.route('/add/', methods=['POST'])
 def add_comic():
+    id = request.json['id']
     site = request.json['site']
     name = request.json['name']
     desc = request.json['desc']
@@ -28,9 +29,9 @@ def add_comic():
     try:
         update_db("""
             insert into comic
-            (site, name, desc, url)
-            values (?, ?, ?, ?)
-        """, args=(site, name, desc, url,))
+            (id, site, name, desc, url)
+            values (?, ?, ?, ?, ?)
+        """, args=(id, site, name, desc, url,))
     except Exception:
         logging.exception('insert comic error!')
         return {
@@ -43,8 +44,8 @@ def add_comic():
     }
 
 
-@app_comic.route('/update/<cid>', methods=['POST'])
-def update_comic_by_id(cid):
+@app_comic.route('/update/<id>', methods=['POST'])
+def update_comic_by_id(id):
     site = request.json['site']
     name = request.json['name']
     desc = request.json['desc']
@@ -55,7 +56,7 @@ def update_comic_by_id(cid):
             update comic
             set site = ?, name = ?, desc = ?, url = ?
             where id = ?
-        """, args=(site, name, desc, url, cid,))
+        """, args=(site, name, desc, url, id,))
     except Exception:
         logging.exception('update comic error!')
         return {

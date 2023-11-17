@@ -21,24 +21,24 @@ def query_chapter_by_url():
     return chapter
 
 
-@app_chapter.route('/query_by_cid/<cid>/')
-def query_chapters_by_cid(cid):
-    chapters = query_db('select * from chapter where cid = ?', args=(cid,), one=False)
+@app_chapter.route('/query_by_cid/<comic_id>/')
+def query_chapters_by_cid(comic_id):
+    chapters = query_db('select * from chapter where comic_id = ?', args=(comic_id,), one=False)
     return chapters
 
 
 @app_chapter.route('/add/', methods=['POST'])
 def add_chapter():
-    cid = request.json['cid']
+    comic_id = request.json['comic_id']
     name = request.json['name']
     url = request.json['url']
 
     try:
         update_db("""
             insert into chapter
-            (cid, name, url)
+            (comic_id, name, url)
             values (?, ?, ?)
-        """, args=(cid, name, url))
+        """, args=(comic_id, name, url))
     except Exception:
         logging.exception('insert chapter error!')
         return {
@@ -53,16 +53,16 @@ def add_chapter():
 
 @app_chapter.route('/update/<id>', methods=['POST'])
 def update_chapter_by_id(id):
-    cid = request.json['cid']
+    comic_id = request.json['comic_id']
     name = request.json['name']
     url = request.json['url']
 
     try:
         update_db("""
             update chapter
-            set cid = ?, name = ?, url = ?
+            set comic_id = ?, name = ?, url = ?
             where id = ?
-        """, args=(cid, name, url, id))
+        """, args=(comic_id, name, url, id))
     except Exception:
         logging.exception('update chapter error!')
         return {

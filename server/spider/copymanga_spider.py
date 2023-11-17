@@ -7,7 +7,6 @@ from db.db import insert_db, query_db
 from logger import mlogger
 from model.chapter import Chapter
 from model.comic import ComicStatus
-from model.image import Image
 from setting import COMIC_PATH
 from spider.spider import Spider
 from utils.retry import retry
@@ -21,18 +20,18 @@ class CopymangaSpider(Spider):
         'headless': False,
     }
 
-    def spider_base_comic_info(self, comic_url: str):
+    def spider_base_comic_info(self, comic_id: str):
         """
         根据url爬取基本漫画信息
         :return:
         """
+        comic_url = CopymangaSpider.get_url(comic_id)
         # 查询漫画信息是否在数据库中存在
-        comic = query_db('select * from comic where url = ?',
-                         (comic_url,), one=True)
+        comic = query_db('select * from comic where id = ?',
+                         (comic_id,), one=True)
         if comic is not None:
             mlogger.warning('查询到url={}的漫画基本信息已存在，不用再次爬取。'.format(comic_url))
             return
-        # comic_url = CopymangaSpider.get_url(comic_id)
 
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(**self.pw_config)
@@ -56,9 +55,9 @@ class CopymangaSpider(Spider):
             comic_tags = CopymangaSpider.save_tag_db(tags)
             # 插入comic到数据库
             insert_db("""
-                insert into comic (url,name,site,desc,status,authors,tags,last_update_date,start_date)
-                values (?,?,?,?,?,?,?,?,?)
-                """, (comic_url, comic_name, self.site,
+                insert into comic (id,url,name,site,desc,status,authors,tags,last_update_date,start_date)
+                values (?,?,?,?,?,?,?,?,?,?)
+                """, (comic_id, comic_url, comic_name, self.site,
                       comic_desc, comic_status.value,
                       ','.join(str(n) for n in comic_authors),
                       ','.join(str(n) for n in comic_tags),
@@ -109,7 +108,8 @@ class CopymangaSpider(Spider):
             page = browser.new_page()
             page.set_default_navigation_timeout(30000)
 
-            comic_url = CopymangaSpider.get_comic_url_by_chapter_url(chapter_url)
+            comic_id = CopymangaSpider.get_comic_id_by_chapter_url(chapter_url)
+            comic_url = CopymangaSpider.get_url(comic_id)
             # 先爬下有无漫画基本信息
             self.spider_base_comic_info(comic_url)
             mlogger.info('开始下载章节,url={}'.format(chapter_url))
@@ -150,23 +150,22 @@ class CopymangaSpider(Spider):
                 'els => els.map(el => el.getAttribute("data-src"))')
 
             # 保存数据库 TODO 事务？
+            # 保存chapter到数据库
+            chapter_id = insert_db('insert into chapter(url, comic_id, name) values (?,?,?)',
+                                   (chapter_url, comic_id, chapter_name))
+            # 保存image到数据库
             for index, img_url in enumerate(img_urls):
-                # 保存image到数据库
                 ext = img_url.split('.')[-1]
                 file_name = '第{}页.{}'.format(index, ext)
                 # 下载文件路径
                 relative_down_file_path = "{}/{}".format(comic_name, chapter_name, file_name)
                 absolute_down_file_path = "{}/{}".format(COMIC_PATH, relative_down_file_path)
 
-                insert_db('insert into image(url, path, chapter_url) values (?,?,?)',
-                          (img_url, relative_down_file_path, chapter_url))
+                insert_db('insert into image(url, path, chapter_id) values (?,?,?)',
+                          (img_url, relative_down_file_path, chapter_id))
                 retry(lambda: CopymangaSpider.down_image(img_url, absolute_down_file_path))
 
             mlogger.info('本章节的所有图片链接，urls={}'.format(img_urls))
-
-            # 保存chapter到数据库
-            insert_db('insert into chapter(url, comic_url, name) values (?,?,?)',
-                      (chapter_url, comic_url, chapter_name))
 
             mlogger.info('关闭章节页面成功！章节名，name={}'.format(chapter_name))
             # 关闭网页和浏览器
