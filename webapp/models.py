@@ -34,7 +34,6 @@ class Image(models.Model):
         return self.url
 
 
-
 class User(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=20)
@@ -63,6 +62,7 @@ class ComicAuthor(models.Model):
     id = models.AutoField(primary_key=True)
     comic_id = models.ForeignObjectRel(Comic, on_delete=models.CASCADE)
     author_id = models.ForeignObjectRel(Author, on_delete=models.CASCADE)
+
 
 class ComicTag(models.Model):
     id = models.AutoField(primary_key=True)
