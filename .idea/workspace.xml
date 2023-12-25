@@ -1,22 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="dba0e572-802e-4862-9ef5-f0edaacf8850" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/server/api/chapter.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/api/chapter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/db/comic_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/db/comic_db.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/spider/copy_comic_spider.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/spider/copy_comic_spider.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/spider/index.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/spider/index.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/spider/spider.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/spider/spider.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/utils/retry.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/utils/retry.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.sh/install.bash" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/api/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/api/chapter.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/api/comic.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/api/image.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/api/index.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/api/user.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db/comic_db.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db/db.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/logger/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/model/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/model/author.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/model/chapter.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/model/comic.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/model/image.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/model/role.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/model/tag.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/model/task.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/model/user.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/pyrightconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/schema.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/script/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/script/import_data_from_local.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/setting.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/spider/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/spider/copymanga_spider.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/spider/index.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/spider/spider.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/spider/spider_factory.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/spider/test_copymanga_spider.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/static/logo.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/utils/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/utils/retry.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/.eslintrc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/pnpm-lock.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/App.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/App.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/components/comic-item/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/components/comic-item/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/components/comic-list/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/components/comic-list/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/components/header/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/components/page-template/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/components/page-template/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/components/tabbar/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/main.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/pages/chapter/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/pages/chapter/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/pages/comic/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/pages/comic/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/pages/discover/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/pages/login/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/pages/regist/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/pages/subscribe/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/pages/user/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/pkg/chapter/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/pkg/comic/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/types/svg.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/tsconfig.node.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/uno.config.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/vite.config.ts" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2VLIlT0DWoxz5DrU9SLEeeMFfcO" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -24,10 +99,23 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "D:/WorkArea/code/maid_comic_house",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+    "WebServerToolWindowFactoryState": "false",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "django-dev",
+    "last_opened_file_path": "D:/WorkArea/code/maid_comic_house/venv/Lib",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "SDKs",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.31609195",
+    "settings.editor.selected.configurable": "preferences.fileTypes",
+    "show.migrate.to.gradle.popup": "false",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -38,7 +126,16 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1694609084972</updated>
+      <workItem from="1703515897820" duration="193000" />
+      <workItem from="1703516098169" duration="4372000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
