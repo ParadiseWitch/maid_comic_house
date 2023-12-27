@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Comic(models.Model):
-    id = models.CharField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     url = models.CharField(max_length=1024)
     name = models.CharField(max_length=100)
     desc = models.CharField(max_length=2048)
@@ -16,7 +16,7 @@ class Comic(models.Model):
 
 class Chapter(models.Model):
     id = models.AutoField(primary_key=True)
-    comic_id = models.ForeignObjectRel(Comic, on_delete=models.CASCADE)
+    comic_id = models.ForeignObjectRel(to=Comic, field=Comic.id, on_delete=models.CASCADE, )
     url = models.CharField(max_length=1024)
     name = models.CharField(max_length=100)
 
@@ -26,7 +26,7 @@ class Chapter(models.Model):
 
 class Image(models.Model):
     id = models.AutoField(primary_key=True)
-    chapter_id = models.ForeignObjectRel(Chapter, on_delete=models.CASCADE)
+    chapter_id = models.ForeignObjectRel(to=Chapter, field=Chapter.id, on_delete=models.CASCADE, )
     url = models.CharField(max_length=1024)
     path = models.CharField(max_length=1024)
 
@@ -60,11 +60,11 @@ class Tag(models.Model):
 
 class ComicAuthor(models.Model):
     id = models.AutoField(primary_key=True)
-    comic_id = models.ForeignObjectRel(Comic, on_delete=models.CASCADE)
-    author_id = models.ForeignObjectRel(Author, on_delete=models.CASCADE)
+    comic_id = models.ForeignObjectRel(to=Comic, field=Comic.id, on_delete=models.CASCADE)
+    author_id = models.ForeignObjectRel(to=Author, field=Author.id, on_delete=models.CASCADE)
 
 
 class ComicTag(models.Model):
     id = models.AutoField(primary_key=True)
-    comic_id = models.ForeignObjectRel(Comic, on_delete=models.CASCADE)
-    Tag_id = models.ForeignObjectRel(Tag, on_delete=models.CASCADE)
+    comic_id = models.ForeignObjectRel(to=Comic, field=Comic.id, on_delete=models.CASCADE)
+    Tag_id = models.ForeignObjectRel(to=Tag, field=Tag.id, on_delete=models.CASCADE)
